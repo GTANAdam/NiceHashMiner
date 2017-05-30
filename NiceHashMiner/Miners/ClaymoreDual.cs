@@ -31,6 +31,8 @@ namespace NiceHashMiner.Miners {
                     return "lbc";
                 case AlgorithmType.Pascal:
                     return "pasc";
+                case AlgorithmType.Sia:
+                    return "sia";
             }
             return "";
         }
@@ -55,18 +57,19 @@ namespace NiceHashMiner.Miners {
                     {
                         AlgorithmType dual = AlgorithmType.NONE;
                         string coinP = "";
-                        if (pair.CurrentExtraLaunchParameters.Contains("Decred")) {
+                        if (pair.CurrentExtraLaunchParameters.ToLower().Contains("decred")) {
                             dual = AlgorithmType.Decred;
                             coinP = " -dcoin dcr ";
                         }
-                        //if (pair.CurrentExtraLaunchParameters.Contains("Siacoin")) {
-                        //    dual = AlgorithmType.;
-                        //}
-                        if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))  {
+                        if (pair.CurrentExtraLaunchParameters.Contains("sia")) {
+                            dual = AlgorithmType.Sia;
+                            coinP = " -dcoin sia ";
+                        }
+                        if (pair.CurrentExtraLaunchParameters.ToLower().Contains("lbry"))  {
                             dual = AlgorithmType.Lbry;
                             coinP = " -dcoin lbc ";
                         }
-                        if (pair.CurrentExtraLaunchParameters.Contains("Pascal")) {
+                        if (pair.CurrentExtraLaunchParameters.ToLower().Contains("pascal")) {
                             dual = AlgorithmType.Pascal;
                             coinP = " -dcoin pasc ";
                         }

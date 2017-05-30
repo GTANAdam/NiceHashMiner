@@ -132,6 +132,8 @@ namespace NiceHashMiner {
                         return AlgorithmType.DaggerLbry;
                     case AlgorithmType.Pascal:
                         return AlgorithmType.DaggerPascal;
+                    case AlgorithmType.Sia:
+                        return AlgorithmType.DaggerSia;
                 }
             }
             return NiceHashID;
@@ -139,6 +141,7 @@ namespace NiceHashMiner {
         public bool IsDual() {
             return (DualNiceHashID() == AlgorithmType.DaggerDecred ||
                     DualNiceHashID() == AlgorithmType.DaggerLbry ||
+                    DualNiceHashID() == AlgorithmType.DaggerSia ||
                     DualNiceHashID() == AlgorithmType.DaggerPascal);
         }
     }

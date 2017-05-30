@@ -43,7 +43,7 @@ namespace NiceHashMiner.Miners
             string apiBind = "";
             if (MiningSetup.CurrentAlgorithmType != AlgorithmType.CryptoNight) {
                 algo = "--algo=" + MiningSetup.MinerName;
-                apiBind = " --api-bind=" + APIPort.ToString();
+                apiBind = " --api-bind=" + APIPort;
             }
 
             IsAPIReadException = MiningSetup.CurrentAlgorithmType == AlgorithmType.CryptoNight;
@@ -58,11 +58,6 @@ namespace NiceHashMiner.Miners
                                   " --devices ";
 
             LastCommandLine += GetDevicesCommandString();
-
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Sia)
-            {
-                LastCommandLine += " -i 28";
-            }
 
             ProcessHandle = _Start();
         }

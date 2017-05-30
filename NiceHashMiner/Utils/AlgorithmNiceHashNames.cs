@@ -11,12 +11,11 @@ namespace NiceHashMiner
     public static class AlgorithmNiceHashNames
     {
         public static string GetName(AlgorithmType type) {
-            if (AlgorithmType.INVALID <= type && type <= AlgorithmType.X11Gost) {
+            if ((AlgorithmType.INVALID <= type && type <= AlgorithmType.Sia) || (AlgorithmType.DaggerSia <= type && type <= AlgorithmType.DaggerPascal))
+            {
                 return Enum.GetName(typeof(AlgorithmType), type);
             }
             return "NameNotFound type not supported";
         }
     }
 }
-
-            if ((AlgorithmType.INVALID <= type && type <= AlgorithmType.X11Gost) || (AlgorithmType.DaggerDecred <= type && type <= AlgorithmType.DaggerPascal)) {
