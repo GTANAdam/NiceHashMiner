@@ -195,7 +195,11 @@ namespace NiceHashMiner.Devices {
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.CryptoNight, "cryptonight"),
                             new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.Equihash, "equihash"),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "")
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, ""),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal)
                         }
                     },
                     { MinerBaseType.OptiminerAMD,
@@ -250,6 +254,14 @@ namespace NiceHashMiner.Devices {
                     { MinerBaseType.experimental,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.experimental, AlgorithmType.NeoScrypt, "neoscrypt")
+                        }
+                    },
+                    { MinerBaseType.ClaymoreAMD,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
                         }
                     },
                 };
