@@ -361,7 +361,9 @@ namespace NiceHashMiner.Miners.Parsing {
             string general = Parse(setMiningPairs, minerOptionPackage.GeneralOptions, false, minerOptionPackage.TemperatureOptions);
             // temp control and parse
             if (ConfigManager.GeneralConfig.DisableAMDTempControl) {
+#if (DEBUG)
                 LogParser("DisableAMDTempControl is TRUE, temp control parameters will be ignored");
+#endif
                 ret = general;
             } else {
                 LogParser("AMD parsing temperature control parameters");

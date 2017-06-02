@@ -656,7 +656,9 @@ namespace NiceHashMiner
         }
 
         protected void StartCoolDownTimerChecker() {
+#if (DEBUG)
             Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Starting cooldown checker");
+#endif
             if (_cooldownCheckTimer != null && _cooldownCheckTimer.Enabled) _cooldownCheckTimer.Stop();
             // cool down init
             _cooldownCheckTimer = new Timer() {
@@ -794,14 +796,16 @@ namespace NiceHashMiner
         }
 
 
-        #region Cooldown/retry logic
+#region Cooldown/retry logic
         /// <summary>
         /// decrement time for half current half time, if less then min ammend
         /// </summary>
         private void CoolDown() {
             if (_currentCooldownTimeInSeconds > _MIN_CooldownTimeInMilliseconds) {
                 _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
+#if (DEBUG)
                 Helpers.ConsolePrint(MinerTAG(), String.Format("{0} Reseting cool time = {1} ms", ProcessTag(), _MIN_CooldownTimeInMilliseconds.ToString()));
+#endif
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             }
         }
@@ -811,10 +815,14 @@ namespace NiceHashMiner
         /// </summary>
         private void CoolUp() {
             _currentCooldownTimeInSeconds *= 2;
+#if (DEBUG)
             Helpers.ConsolePrint(MinerTAG(), String.Format("{0} Cooling UP, cool time is {1} ms", ProcessTag(), _currentCooldownTimeInSeconds.ToString()));
+#endif
             if (_currentCooldownTimeInSeconds > _MAX_CooldownTimeInMilliseconds) {
                 _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
+#if (DEBUG)
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " MAX cool time exceeded. RESTARTING");
+#endif
                 Restart();
             }
         }
@@ -833,7 +841,9 @@ namespace NiceHashMiner
                 } else if (_currentMinerReadStatus == MinerAPIReadStatus.GOT_READ) {
                     CoolDown();
                 } else if (_currentMinerReadStatus == MinerAPIReadStatus.READ_SPEED_ZERO) {
+#if (DEBUG)
                     Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " READ SPEED ZERO, will cool up");
+#endif
                     CoolUp();
                 } else if (_currentMinerReadStatus == MinerAPIReadStatus.RESTART) {
                     Restart();
@@ -845,7 +855,7 @@ namespace NiceHashMiner
             }
         }
 
-        #endregion //Cooldown/retry logic
+#endregion //Cooldown/retry logic
 
     }
 }

@@ -551,7 +551,9 @@ namespace NiceHashMiner
         void SMACheck_Tick(object sender, EventArgs e)
         {
             string worker = textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim();
+#if (DEBUG)
             Helpers.ConsolePrint("NICEHASH", "SMA get");
+#endif
             Dictionary<AlgorithmType, NiceHashSMA> t = null;
 
             for (int i = 0; i < 5; i++) {

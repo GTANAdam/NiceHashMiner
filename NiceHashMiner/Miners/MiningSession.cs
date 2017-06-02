@@ -3,6 +3,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Configs;
@@ -254,24 +255,38 @@ namespace NiceHashMiner.Miners {
             // print profit statuses
             if (log) {
                 StringBuilder stringBuilderFull = new StringBuilder();
-                stringBuilderFull.AppendLine("Current device profits:");
+                stringBuilderFull.AppendLine("Current device profits:\r\n");
                 foreach (var device in _miningDevices) {
                     StringBuilder stringBuilderDevice = new StringBuilder();
-                    stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", device.Device.UUID, device.Device.GetFullName()));
-                    foreach (var algo in device.Algorithms) {
-                       stringBuilderDevice.AppendLine(String.Format("\t\tPROFIT = {0}\t(SPEED = {1}\t\t| NHSMA = {2})\t[{3}]",
-                            algo.CurrentProfit.ToString(DOUBLE_FORMAT), // Profit
+                    StringBuilder stringBuilderDeviceBench = new StringBuilder();
+#if (DEBUG)
+                    stringBuilderDevice.AppendLine(String.Format("Profits for {0} ({1}):", device.Device.UUID, device.Device.GetFullName()));
+#else
+                    stringBuilderDevice.AppendLine(String.Format("Profits for {0}:", device.Device.GetFullName()));
+#endif
+                    foreach (var algo in device.Algorithms)
+                    {
+                        var profit = algo.CurrentProfit.ToString(DOUBLE_FORMAT); // Profit
+                        var check = algo.AvaragedSpeed.ToString(CultureInfo.InvariantCulture).Length < 7;
+                       stringBuilderDeviceBench.AppendLine(String.Format("\tPROFIT = {0} \t(SPEED = {1}" + (algo.IsDual() ? "\t" : "\t\t") + (check ? "\t" : "") + "| NHSMA = {2})" + (algo.IsDual() ? "\t" : "\t\t") + "[{3}]",
+                           "$" + ExchangeRateAPI.ConvertToActiveCurrency(Convert.ToDouble(profit) * Globals.BitcoinUSDRate).ToString("F2", CultureInfo.InvariantCulture),
+                            //profit,
                             algo.AvaragedSpeed + (algo.IsDual() ? "/" + algo.SecondaryAveragedSpeed : ""), // Speed
                             algo.CurNhmSMADataVal + (algo.IsDual() ? "/" + algo.SecondaryCurNhmSMADataVal : ""), // NiceHashData
                             algo.AlgorithmStringID // Name
                         ));
                     }
+                    List<string> items = new List<string>(stringBuilderDeviceBench.ToString().Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
+                    items.Sort();
+                    stringBuilderDevice.Append(string.Join("\r\n", items.ToArray()));
                     // most profitable
-                    stringBuilderDevice.AppendLine(String.Format("\t\tMOST PROFITABLE ALGO: {0}, PROFIT: {1}",
+                    stringBuilderDevice.AppendLine(String.Format("\r\n\tMOST PROFITABLE ALGO: {0}, PROFIT: {1}",
                         device.GetMostProfitableString(),
-                        device.GetCurrentMostProfitValue.ToString(DOUBLE_FORMAT)));
+                        "$" + ExchangeRateAPI.ConvertToActiveCurrency(Convert.ToDouble(device.GetCurrentMostProfitValue) * Globals.BitcoinUSDRate).ToString("F2", CultureInfo.InvariantCulture)
+                        ));
                     stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
                 }
+
                 Helpers.ConsolePrint(TAG, stringBuilderFull.ToString());
             }
 
@@ -284,14 +299,18 @@ namespace NiceHashMiner.Miners {
                 double percDiff = ((a - b)) / b;
                 if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold) {
                     // don't switch
+#if (DEBUG)
                     Helpers.ConsolePrint(TAG, String.Format("Will NOT switch profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
+#endif
                     // RESTORE OLD PROFITS STATE
                     foreach (var device in _miningDevices) {
                         device.RestoreOldProfitsState();
                     }
                     return;
                 } else {
+#if (DEBUG)
                     Helpers.ConsolePrint(TAG, String.Format("Will SWITCH profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
+#endif
                 }
             }
 
