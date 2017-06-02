@@ -27,11 +27,11 @@ namespace NiceHashMiner {
             { AlgorithmType.NeoScrypt ,                     MHs },
             { AlgorithmType.Lyra2RE ,                       MHs },
             { AlgorithmType.WhirlpoolX_UNUSED ,             MHs },
-            { AlgorithmType.Qubit_UNUSED ,                  MHs },
-            { AlgorithmType.Quark_UNUSED ,                  MHs },
-            { AlgorithmType.Axiom_UNUSED ,                  kHs }, // NOT used
-            { AlgorithmType.Lyra2REv2 ,                     MHs },
-            { AlgorithmType.ScryptJaneNf16_UNUSED ,         kHs }, // NOT used
+            { AlgorithmType.Qubit_UNUSED ,                  GHs },
+            { AlgorithmType.Quark_UNUSED ,                  GHs },
+            { AlgorithmType.Axiom_UNUSED ,                  GHs }, // NOT used
+            { AlgorithmType.Lyra2REv2 ,                     GHs },
+            { AlgorithmType.ScryptJaneNf16_UNUSED ,         GHs }, // NOT used
             { AlgorithmType.Blake256r8_UNUSED ,             GHs },
             { AlgorithmType.Blake256r14_UNUSED ,            GHs },
             { AlgorithmType.Blake256r8vnl_UNUSED ,          GHs },
