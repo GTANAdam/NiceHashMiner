@@ -291,7 +291,9 @@ namespace NiceHashMiner.Miners {
             }
 
             // check profit threshold
-            Helpers.ConsolePrint(TAG, String.Format("PrevStateProfit {0}, CurrentProfit {1}", PrevStateProfit, CurrentProfit));
+            var curP = "$" + ExchangeRateAPI.ConvertToActiveCurrency(Convert.ToDouble(CurrentProfit) * Globals.BitcoinUSDRate).ToString("F2", CultureInfo.InvariantCulture);
+            var preP = "$" + ExchangeRateAPI.ConvertToActiveCurrency(Convert.ToDouble(PrevStateProfit) * Globals.BitcoinUSDRate).ToString("F2", CultureInfo.InvariantCulture);
+            Helpers.ConsolePrint(TAG, String.Format("Previous Est. Profit {0}, Current Estimated Profit {1}", preP, curP));
             if (PrevStateProfit > 0 && CurrentProfit > 0) {
                 double a = Math.Max(PrevStateProfit, CurrentProfit);
                 double b = Math.Min(PrevStateProfit, CurrentProfit);
