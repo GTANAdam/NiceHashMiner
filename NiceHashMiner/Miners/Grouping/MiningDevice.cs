@@ -133,6 +133,10 @@ namespace NiceHashMiner.Miners.Grouping {
                         algo.SecondaryCurNhmSMADataVal = NiceHashData[secondaryKey].paying;
                         algo.CurrentProfit += algo.SecondaryCurNhmSMADataVal * algo.SecondaryAveragedSpeed * 0.000000001;
                     }
+                    if (algo.NiceHashID == AlgorithmType.Lyra2REv2)
+                    {
+                        algo.CurrentProfit = algo.CurNhmSMADataVal * algo.AvaragedSpeed * 0.000000000001;
+                    }
                 } else {
                     algo.CurrentProfit = 0;
                 }
