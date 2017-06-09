@@ -7,8 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NiceHashMiner.Miners {
     
@@ -181,6 +183,12 @@ namespace NiceHashMiner.Miners {
          */
         public bool prefer_ipv4 = true;
 
+        public bool use_tls = false;
+        public bool tls_secure_algo = true;
+        public string tls_fingerprint = "";
+        public int giveup_limit = 0;
+        public string output_file = "";
+
     }
 
     public class XmrStackCPUMiner : Miner {
@@ -210,7 +218,7 @@ namespace NiceHashMiner.Miners {
                     var config = new XmrStackCPUMinerConfig(numTr, pool, wallet, this.APIPort);
 
                     //config.Inti_cpu_threads_conf(false, false, true, ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled);
-                    config.Inti_cpu_threads_conf(false, false, false, IsHyperThreadingEnabled);
+                    config.Inti_cpu_threads_conf(false, true, true, IsHyperThreadingEnabled);
                     var confJson = JObject.FromObject(config);
                     string writeStr = confJson.ToString();
                     int start = writeStr.IndexOf("{");
@@ -227,37 +235,31 @@ namespace NiceHashMiner.Miners {
         }
 
         public override APIData GetSummary() {
-            string resp;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+            string resp;
+            using (WebClient client = new WebClient())
+            {
+                resp = client.DownloadString("http://127.0.0.1:" + APIPort.ToString() + "/h");
+            }
 
-            string DataToSend = GetHttpRequestNHMAgentStrin("h");
-
-            resp = GetAPIData(APIPort, DataToSend);
             if (resp == null) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
             }
-            const string Totals = "Totals:";
-            const string Highest = "Highest:";
-            int start_i = resp.IndexOf(Totals);
-            int end_i = resp.IndexOf(Highest);
-            if (start_i > -1 && end_i > -1) {
-                string sub_resp = resp.Substring(start_i, end_i);
-                sub_resp = sub_resp.Replace(Totals, "");
-                sub_resp = sub_resp.Replace(Highest, "");
-                var strings = sub_resp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var s in strings) {
-                    if (s != "(na)") {
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-                        ad.Speed = Helpers.ParseDouble(s);
-                        break;
-                    }
-                }
-            }
-            // check if speed zero
-            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
 
+            var result = Regex.Match(resp, "(?<=Totals:</th><td> )(.*?)(?=</td><td>)").ToString();
+            if(string.IsNullOrEmpty(result))
+            {
+                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+            }
+            else
+            {
+                _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                ad.Speed = Helpers.ParseDouble(result);
+            }
+
+            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
             return ad;
         }
 

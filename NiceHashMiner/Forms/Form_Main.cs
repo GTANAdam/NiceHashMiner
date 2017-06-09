@@ -321,21 +321,21 @@ namespace NiceHashMiner
                     Form_Loading downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.StandardDlSetup));
                     SetChildFormCenter(downloadUnzipForm);
                     downloadUnzipForm.ShowDialog();
-                }
-                // check if files are mising
-                if (!MinersExistanceChecker.IsMinersBinsInit()) {
-                    var result = MessageBox.Show(International.GetText("Form_Main_bins_folder_files_missing"),
-                        International.GetText("Warning_with_Exclamation"),
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (result == DialogResult.Yes) {
-                        ConfigManager.GeneralConfig.DownloadInit = false;
-                        ConfigManager.GeneralConfigFileCommit();
-                        Process PHandle = new Process();
-                        PHandle.StartInfo.FileName = Application.ExecutablePath;
-                        PHandle.Start();
-                        Close();
-                        return;
-                    }
+                //}
+                //// check if files are mising
+                //if (!MinersExistanceChecker.IsMinersBinsInit()) {
+                //    var result = MessageBox.Show(International.GetText("Form_Main_bins_folder_files_missing"),
+                //        International.GetText("Warning_with_Exclamation"),
+                //        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                //    if (result == DialogResult.Yes) {
+                //        ConfigManager.GeneralConfig.DownloadInit = false;
+                //        ConfigManager.GeneralConfigFileCommit();
+                //        Process PHandle = new Process();
+                //        PHandle.StartInfo.FileName = Application.ExecutablePath;
+                //        PHandle.Start();
+                //        Close();
+                //        return;
+                //    }
                 } else if (!ConfigManager.GeneralConfig.DownloadInit) {
                     // all good
                     ConfigManager.GeneralConfig.DownloadInit = true;
